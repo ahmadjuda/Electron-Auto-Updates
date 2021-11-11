@@ -43,6 +43,12 @@
     const notification = document.getElementById('notification');
     const message = document.getElementById('message');
     const restartButton = document.getElementById('restart-button');
+    
+    ipcRenderer.send('app_version');
+    ipcRenderer.on('app_version', (event, arg) => {
+      ipcRenderer.removeAllListeners('app_version');
+      version.innerText = 'Version ' + arg.version;
+    });
 
     ipcRenderer.on('update_available', () => {
         ipcRenderer.removeAllListeners('update_available');
@@ -54,12 +60,6 @@
         message.innerText = 'Update Downloaded. It will be installed on restart. Restart now?';
         restartButton.classList.remove('hidden');
         notification.classList.remove('hidden');
-    });
-    
-    ipcRenderer.send('app_version');
-    ipcRenderer.on('app_version', (event, arg) => {
-      ipcRenderer.removeAllListeners('app_version');
-      version.innerText = 'Version ' + arg.version;
     });
 
     function closeNotification() {
